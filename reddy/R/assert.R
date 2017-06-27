@@ -6,6 +6,17 @@ assert_is_string <- function(text, ...) {
 }
 
 #'
+assert_is_integer <- function(number, ...) {
+    if (!(length(number) == 1)) {
+        stop(paste("Input", number, "is not a integer", sep=" "))
+    }
+
+    if (!(number %% 1 == 0 )) {
+        stop(paste("Input", number, "is not a integer", sep=" "))
+    }
+}
+
+#'
 assert_file_exists <- function(filename, ...) {
     assert_is_string(filename)
 
