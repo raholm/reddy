@@ -4,7 +4,7 @@
 #' @param filename The filename
 #' @param pagesize The number of rows read in each iteration
 #' @return A dataframe containing the Reddit comments
-read_reddit_stream <- function(filename, pagesize=1000, ...) {
+read_reddit_stream <- function(filename, pagesize=1000) {
     assert_file_is_json(filename)
 
     data <- try(jsonlite::stream_in(file(filename), pagesize=pagesize, verbose=FALSE), silent=TRUE)
@@ -19,7 +19,7 @@ read_reddit_stream <- function(filename, pagesize=1000, ...) {
 #'
 #' @param filename The filename
 #' @return A dataframe constaining the Reddit comments
-read_reddit_raw <- function(filename, ...) {
+read_reddit_raw <- function(filename) {
     assert_file_is_json(filename)
 
     data <- try(jsonlite::read_json(filename, simplifyVector = TRUE), silent=TRUE)
@@ -27,17 +27,20 @@ read_reddit_raw <- function(filename, ...) {
     .check_reddit_data(data)
 }
 
-.check_reddit_data <- function(data, ...) {
+.check_reddit_data <- function(data) {
     if (!is.data.frame(data)) {
         error_message <- data[[1]]
-        hint <- ""
+        hint <- NULL
 
         if (grepl("EOF", error_message) |
             grepl("',' or ']'", error_message)) {
             hint <- "The error probabily means that the json-objects are not enclosed in '[]' and/or separated by ','"
         }
 
-        stop(paste(error_message, paste("Hint:", hint, sep=" "), sep="\n"))
+        if (!is.null(hint))
+            error_message <- paste(error_message, paste("Hint:", hint, sep=" "), sep="\n")
+
+        stop(error_message)
     }
 
     data
