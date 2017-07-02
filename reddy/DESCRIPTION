@@ -1,10 +1,16 @@
 Package: reddy
 Title: Reddit Comment Curation
 Version: 0.0.0.9000
-Authors@R: person("Rasmus", "Holm", email = "first.last@example.com", role = c("aut", "cre"))
+Authors@R: person("Rasmus", "Holm", email = "rasmus.holm723@gmail.com", role = c("aut", "cre"))
 Description: What the package does (one paragraph).
 Depends: R (>= 3.4.0)
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
-Suggests: testthat
+Suggests:
+    testthat
+Imports:
+    jsonlite,
+    dplyr,
+    stringr
+RoxygenNote: 6.0.1
