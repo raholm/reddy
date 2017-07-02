@@ -58,7 +58,7 @@ filter_non_alphanumeric <- function(corpus) {
 #' @keywords internal
 .remove_non_alphanumeric <- function(corpus) {
     .remove_non_alphanumeric_helper <- function(text) {
-        as.factor(stringr::str_replace_all(text, "[[:punct:]^]", ""))
+        as.factor(stringr::str_trim(stringr::str_replace_all(text, "[[:punct:]^]", "")))
     }
 
     corpus %>% dplyr::mutate(body=.remove_non_alphanumeric_helper(body))

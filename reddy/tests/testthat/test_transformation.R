@@ -48,7 +48,7 @@ test_that("filter_non_alphanumeric raises an error for invalid input", {
 })
 
 test_that("filter_non_alphanumeric removes non-alphanumeric characters from input", {
-    corpus <- data.frame(body=c("hello{@\\[}}}^^.,-^'", "there's a bu^gger!"))
+    corpus <- data.frame(body=c("hello{@\\[}}}^^.,-^'", "^^. there's a bu^gger!"))
     actual <- filter_non_alphanumeric(corpus)
     expected <- data.frame(body=c("hello", "theres a bugger"))
     expect_equal(actual, expected)
