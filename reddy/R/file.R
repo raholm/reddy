@@ -42,11 +42,3 @@ read_reddit_raw <- function(filename, ...) {
 
     data
 }
-
-#'
-get_filesize_in_mb <- function(filename, ...) {
-    assert_file_exists(filename)
-
-    bytes <- file.size("filaname")
-    bytes / (1024 * 1024)
-}
