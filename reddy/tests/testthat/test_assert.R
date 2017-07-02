@@ -22,18 +22,18 @@ test_that("assert_is_integer does not raise an error for valid input", {
 })
 
 test_that("assert_file_exists raises an error for invalid file", {
-    expect_error(assert_file_exists("./files/file.invalid"))
+    expect_error(assert_file_exists("./files/empty_file.invalid"))
 })
 
 test_that("assert_file_exists does not an error for valid file", {
-    expect_message(assert_file_exists("./files/file.valid"), NA)
+    expect_message(assert_file_exists("./files/empty_file.valid"), NA)
 })
 
 test_that("assert_file_is_json raises an error for invalid file", {
-    expect_message(assert_file_exists("./files/file.valid"), NA)
-    expect_error(assert_file_is_json("./files/file.valid"))
+    expect_message(assert_file_exists("./files/empty_file.valid"), NA)
+    expect_error(assert_file_is_json("./files/empty_file.valid"))
 })
 
 test_that("assert_file_is_json does not raise an error for valid file", {
-    expect_message(assert_file_is_json("./files/file.json"), NA)
+    expect_message(assert_file_is_json("./files/empty_file.json"), NA)
 })
