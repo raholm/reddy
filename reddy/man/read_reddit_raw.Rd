@@ -5,7 +5,7 @@
 \title{Reads a json file containing Reddit comments in a single pass.
 Assumes that the comments are enclosed in '[]' and separated by ','.}
 \usage{
-read_reddit_raw(filename, ...)
+read_reddit_raw(filename)
 }
 \arguments{
 \item{filename}{The filename}
@@ -18,5 +18,5 @@ Reads a json file containing Reddit comments in a single pass.
 Assumes that the comments are enclosed in '[]' and separated by ','.
 }
 \note{
-This is very memory hungry. For larger files the recommended method is \code{\link{read_reddit_stream}}.
+This is very memory hungry. For larger files it is recommended to use \code{\link{read_reddit_stream}} instead.
 }

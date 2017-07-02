@@ -5,7 +5,7 @@
 \title{Reads a json file containing Reddit comments in the form of a stream.
 It assumes that every line in the file is a comment record in the form of a json object.}
 \usage{
-read_reddit_stream(filename, pagesize = 1000, ...)
+read_reddit_stream(filename, pagesize = 1000)
 }
 \arguments{
 \item{filename}{The filename}

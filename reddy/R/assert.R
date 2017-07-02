@@ -3,20 +3,62 @@
 #' @param text Input that is checked for being a string.
 assert_is_string <- function(text) {
     if (!(is.character(text) & length(text) == 1)) {
-        stop(paste("Input", text, "is not a string", sep=" "))
+        stop(paste("Input", text, "is not a string.", sep=" "))
+    }
+}
+
+#' Assets that the input is character.
+#'
+#' @param character Input that is checked for being a string
+#' @param null.ok If true, will not assert null value
+assert_is_character <- function(character, null.ok=FALSE) {
+    if (!null.ok & is.null(character)) {
+        stop("Input character is null.")
+    }
+
+    if (!is.character(character) & !is.null(character)) {
+        stop(paste("Input", character, "is not a character.", sep=" "))
     }
 }
 
 #' Asserts that input is integer
 #'
 #' @param number Input that is checked for being an integer.
-assert_is_integer <- function(number) {
+assert_is_integer <- function(number, lower=-Inf, upper=Inf) {
     if (!(length(number) == 1)) {
-        stop(paste("Input", number, "is not a integer", sep=" "))
+        stop(paste("Input", number, "is not a integer.", sep=" "))
     }
 
     if (!(number %% 1 == 0 )) {
-        stop(paste("Input", number, "is not a integer", sep=" "))
+        stop(paste("Input", number, "is not a integer.", sep=" "))
+    }
+
+    lower <- as.numeric(lower)
+    upper <- as.numeric(upper)
+
+    if (!is.null(lower)) {
+        if (number < lower) {
+            stop(paste("Input", number, "is less than.", lower, sep=" "))
+        }
+    }
+
+    if (!is.null(upper)) {
+        if (number > upper) {
+            stop(paste("Input", number, "is greater than.", upper, sep=" "))
+        }
+    }
+
+}
+
+assert_subset <- function(set, subset, null.ok=FALSE) {
+    if (!null.ok & is.null(subset)) {
+        stop("Input subset is null.")
+    }
+
+    for (i in seq_along(subset)) {
+        if (!(subset[i] %in% set)) {
+            stop(paste(subset[i], " is not in ", set, ".", sep=""))
+        }
     }
 }
 
@@ -27,7 +69,7 @@ assert_file_exists <- function(filename) {
     assert_is_string(filename)
 
     if (!file.exists(filename)) {
-        stop(paste("File", filename, "does not exist!", sep=" "))
+        stop(paste("File", filename, "does not exist.", sep=" "))
     }
 }
 
@@ -38,6 +80,6 @@ assert_file_is_json <- function(filename) {
     assert_file_exists(filename)
 
     if (!endsWith(filename, ".json")) {
-        stop(paste("File", filename, "does not end with .json", sep=" "))
+        stop(paste("File", filename, "does not end with '.json'.", sep=" "))
     }
 }

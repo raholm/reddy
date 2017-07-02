@@ -4,6 +4,8 @@
 #' @param filename The filename
 #' @param pagesize The number of rows read in each iteration
 #' @return A dataframe containing the Reddit comments
+#'
+#' @export
 read_reddit_stream <- function(filename, pagesize=1000) {
     assert_file_is_json(filename)
 
@@ -19,6 +21,8 @@ read_reddit_stream <- function(filename, pagesize=1000) {
 #'
 #' @param filename The filename
 #' @return A dataframe constaining the Reddit comments
+#'
+#' @export
 read_reddit_raw <- function(filename) {
     assert_file_is_json(filename)
 
@@ -27,6 +31,7 @@ read_reddit_raw <- function(filename) {
     .check_reddit_data(data)
 }
 
+#' @keywords internal
 .check_reddit_data <- function(data) {
     if (!is.data.frame(data)) {
         error_message <- data[[1]]
