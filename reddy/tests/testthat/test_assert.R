@@ -1,40 +1,40 @@
 test_that("assert_is_string raises an error for invalid input", {
-    expect_error(assert_is_string(123))
-    expect_error(assert_is_string(list(a="test string")))
-    expect_error(assert_is_string(c("a", "b", "c")))
+    expect_error(assert_string(123))
+    expect_error(assert_string(list(a="test string")))
+    expect_error(assert_string(c("a", "b", "c")))
 })
 
 test_that("assert_is_string does not raise an error for valid input", {
-    expect_message(assert_is_string("test string"), NA)
+    expect_message(assert_string("test string"), NA)
 })
 
-test_that("assert_is_character raises an error for invalid input", {
-    expect_error(assert_is_character(123))
-    expect_error(assert_is_character(list(a="test_string")))
-        expect_error(assert_is_character(NULL, null.ok=FALSE))
+test_that("assert_character raises an error for invalid input", {
+    expect_error(assert_character(123))
+    expect_error(assert_character(list(a="test_string")))
+        expect_error(assert_character(NULL, null.ok=FALSE))
 })
 
-test_that("assert_is_character does not raise an error for valid input", {
-    expect_message(assert_is_character("test string"), NA)
-    expect_message(assert_is_character(c("a", "b", "c")), NA)
-    expect_message(assert_is_character(NULL, null.ok=TRUE), NA)
+test_that("assert_character does not raise an error for valid input", {
+    expect_message(assert_character("test string"), NA)
+    expect_message(assert_character(c("a", "b", "c")), NA)
+    expect_message(assert_character(NULL, null.ok=TRUE), NA)
 })
 
-test_that("assert_is_integer raises an error for invalid input", {
-    expect_error(assert_is_integer(c(1, 2, 3)))
-    expect_error(assert_is_integer(list(a=123)))
-    expect_error(assert_is_integer("test string"))
-    expect_error(assert_is_integer(1.5))
-    expect_error(assert_is_integer(1, lower=2))
-    expect_error(assert_is_integer(1, upper=0))
+test_that("assert_integer raises an error for invalid input", {
+    expect_error(assert_integer(c(1, 2, 3)))
+    expect_error(assert_integer(list(a=123)))
+    expect_error(assert_integer("test string"))
+    expect_error(assert_integer(1.5))
+    expect_error(assert_integer(1, lower=2))
+    expect_error(assert_integer(1, upper=0))
 })
 
-test_that("assert_is_integer does not raise an error for valid input", {
-    expect_message(assert_is_integer(123), NA)
-    expect_message(assert_is_integer(-123), NA)
-    expect_message(assert_is_integer(0), NA)
-    expect_message(assert_is_integer(0, lower=0, upper=1), NA)
-    expect_message(assert_is_integer(1, lower=0, upper=1), NA)
+test_that("assert_integer does not raise an error for valid input", {
+    expect_message(assert_integer(123), NA)
+    expect_message(assert_integer(-123), NA)
+    expect_message(assert_integer(0), NA)
+    expect_message(assert_integer(0, lower=0, upper=1), NA)
+    expect_message(assert_integer(1, lower=0, upper=1), NA)
 })
 
 test_that("assert_subset raises an error for invalid input", {
@@ -57,11 +57,11 @@ test_that("assert_file_exists does not an error for valid file", {
     expect_message(assert_file_exists("./files/empty_file.valid"), NA)
 })
 
-test_that("assert_file_is_json raises an error for invalid file", {
+test_that("assert_json_file raises an error for invalid file", {
     expect_message(assert_file_exists("./files/empty_file.valid"), NA)
-    expect_error(assert_file_is_json("./files/empty_file.valid"))
+    expect_error(assert_json_file("./files/empty_file.valid"))
 })
 
-test_that("assert_file_is_json does not raise an error for valid file", {
-    expect_message(assert_file_is_json("./files/empty_file.json"), NA)
+test_that("assert_json_file does not raise an error for valid file", {
+    expect_message(assert_json_file("./files/empty_file.json"), NA)
 })

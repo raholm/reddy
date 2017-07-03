@@ -7,7 +7,7 @@
 #'
 #' @export
 filter_attrs <- function(corpus, attrs=NULL, negative=FALSE) {
-    assert_is_character(attrs, null.ok=TRUE)
+    assert_character(attrs, null.ok=TRUE)
     assert_subset(names(corpus), attrs)
 
     if (negative) {
