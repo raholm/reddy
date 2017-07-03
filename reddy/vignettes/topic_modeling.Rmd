@@ -9,6 +9,10 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+```{r, echo = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
+
 One area of text analysis is so called topic modeling, i.e, finding topics in a corpus of documents. In this vignette I will show how that can be done with Reddit comments using \textit{mallet}.
 
 # Loading the required libraries

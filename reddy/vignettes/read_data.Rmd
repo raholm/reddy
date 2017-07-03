@@ -9,6 +9,10 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+```{r, echo = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
+
 This package supports two types of read operations on Reddit comments. \code{read_reddit_raw} and \code{read_reddit_stream} that are suited for small respectively large files. It is important to know that they assume different structure in the file. The raw-mode expects typical json-format where all json-objects are enclosed in '[]' and separated by ','. The stream-mode on the otherhand expect that each row contains a json-object, thus separation is '\\n'.
 
 # Reading using raw
