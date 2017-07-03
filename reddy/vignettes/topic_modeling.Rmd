@@ -20,7 +20,7 @@ suppressMessages(library(mallet))
 
 # Reading corpus
 
-The first thing we need to do is to actually read the corpus from file and in this case I am only interested in the comment bodies and their ids.
+The first thing we need to do is to actually read the corpus from file and in this case we are only interested in the comment bodies and their ids.
 
 ```{r}
 filename <- paste(system.file("extdata", package="reddy"),
@@ -31,7 +31,7 @@ corpus <- read_reddit_stream(filename) %>%
 
 # Text Curation
 
-Before actually performing the analysis, it is reasonable to do some text curation, i.e. pre-processing, that hopefully helps the performance of the analysis.
+Before performing the analysis, it is reasonable to do some text curation, i.e. pre-processing, that hopefully helps the performance of the analysis.
 
 ```{r}
 curated_corpus <- corpus %>%
@@ -40,7 +40,7 @@ curated_corpus <- corpus %>%
 
 # Latent Dirichlet Allocation
 
-Mallet expects a file containing stopwords and this package contains a file with english stopwords taken from \url{http://www.ranks.nl/stopwords}. The first step is to create mallet instances of your corpus that can be used by topic models provided by mallet. Then create the topic model of your choice, in this case we use latent dirichlet allocation (LDA), and load the mallet instances into it.
+Mallet expects a file containing stopwords which are removed from the corpus and this package contains a file with english stopwords taken from \url{http://www.ranks.nl/stopwords}. The first step is to create mallet instances of your corpus that can be used by topic models provided by mallet. Then create the topic model of your choice, in this case we use latent dirichlet allocation (LDA), and load the mallet instances into it.
 
 ```{r}
 stopwords <- paste(system.file("extdata", package="reddy"),
@@ -64,14 +64,14 @@ head(word_freqs)
 
 ## Training
 
-Before training it is possible to optimize the hyperparameters of the model expecting to gain better performance and then we do the actual training, in this particular case 200 iterations.
+It is possible to optimize the hyperparameters of the model before the training begins expecting to gain better performance. Then we perform the actual training, in this particular case 200 iterations, that can eventually be used to extract interesting results.
 
 ```{r}
 topic_model$setAlphaOptimization(20, 50)
 topic_model$train(200)
 ```
 
-## Result
+## Results
 
 Mallet provides functions for extracting the important pieces of information from our trained topic model. We want to see the distribution of topics over each document and distribution of words over each topic. There is also a function for getting the top words of different topics
 
