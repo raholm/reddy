@@ -1,0 +1,84 @@
+---
+title: "Topic Modeling with Mallet"
+author: "Rasmus Holm"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+One area of text analysis is so called topic modeling, i.e, finding topics in a corpus of documents. In this vignette I will show how that can be done with Reddit comments using \textit{mallet}.
+
+# Loading the required libraries
+```{r}
+suppressMessages(library(reddy))
+suppressMessages(library(dplyr))
+suppressMessages(library(mallet))
+```
+
+# Reading corpus
+
+The first thing we need to do is to actually read the corpus from file and in this case I am only interested in the comment bodies and their ids.
+
+```{r}
+filename <- paste(system.file("extdata", package="reddy"),
+                  "RC_2008_01_1000_stream.json", sep="/")
+corpus <- read_reddit_stream(filename) %>%
+    filter_attrs(c("id", "body"), negative=TRUE)
+```
+
+# Text Curation
+
+Before actually performing the analysis, it is reasonable to do some text curation, i.e. pre-processing, that hopefully helps the performance of the analysis.
+
+```{r}
+curated_corpus <- corpus %>%
+    filter_digits() %>% filter_non_alphanumeric()
+```
+
+# Latent Dirichlet Allocation
+
+Mallet expects a file containing stopwords and this package contains a file with english stopwords taken from \url{http://www.ranks.nl/stopwords}. The first step is to create mallet instances of your corpus that can be used by topic models provided by mallet. Then create the topic model of your choice, in this case we use latent dirichlet allocation (LDA), and load the mallet instances into it.
+
+```{r}
+stopwords <- paste(system.file("extdata", package="reddy"),
+                  "stopwords.txt", sep="/")
+mallet_instances <- mallet.import(curated_corpus$id, curated_corpus$body, stopwords)
+topic_model <- MalletLDA(num.topics=20)
+topic_model$loadDocuments(mallet_instances)
+```
+
+## Statistics
+
+Mallet provides some utility function to get some statistics about the corpus. For instance the vocabulary, word frequences, and word-document frequencies.
+
+```{r}
+vocabulary <- topic_model$getVocabulary()
+word_freqs <- mallet.word.freqs(topic_model)
+
+head(vocabulary)
+head(word_freqs)
+```
+
+## Training
+
+Before training it is possible to optimize the hyperparameters of the model expecting to gain better performance and then we do the actual training, in this particular case 200 iterations.
+
+```{r}
+topic_model$setAlphaOptimization(20, 50)
+topic_model$train(200)
+```
+
+## Result
+
+Mallet provides functions for extracting the important pieces of information from our trained topic model. We want to see the distribution of topics over each document and distribution of words over each topic. There is also a function for getting the top words of different topics
+
+```{r}
+doc_topics <- mallet.doc.topics(topic_model, smoothed=T, normalized=T)
+topic_words <- mallet.topic.words(topic_model, smoothed=T, normalized=T)
+
+as.vector(head(doc_topics, n=1))
+mallet.top.words(topic_model, topic_words[1,])
+```
