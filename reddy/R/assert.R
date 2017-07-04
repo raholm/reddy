@@ -52,6 +52,15 @@ assert_integer <- function(number, lower=-Inf, upper=Inf) {
 
 }
 
+#' Asserts that input is of specified type
+assert_type <- function(object, type) {
+    if (type == "tbl_df" & !dplyr::is.tbl(object)) {
+        stop("Object is not a tbl_df.")
+    } else if (typeof(object) != type) {
+        stop(paste("Object is not of type ", type, ".", sep=""))
+    }
+}
+
 #' Asserts that input is subset of a set
 #'
 #' @param set The full set
@@ -83,7 +92,7 @@ assert_file_exists <- function(filename) {
 #' Asserts that the input is an existing json file
 #'
 #' @param filename Input that is chcked for being an existing json file.
-assert_json_file<- function(filename) {
+assert_json_file <- function(filename) {
     assert_file_exists(filename)
 
     if (!endsWith(filename, ".json")) {

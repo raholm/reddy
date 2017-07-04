@@ -6,7 +6,7 @@
 #' @return A dataframe containing the Reddit comments
 #'
 #' @export
-read_reddit_stream <- function(filename, pagesize=1000) {
+read_reddit_stream <- function(filename, pagesize=10000) {
     assert_json_file(filename)
 
     data <- try(jsonlite::stream_in(file(filename), pagesize=pagesize, verbose=FALSE), silent=TRUE)
