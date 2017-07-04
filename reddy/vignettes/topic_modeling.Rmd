@@ -28,9 +28,9 @@ The first thing we need to do is to actually read the corpus from file and in th
 
 ```{r}
 filename <- paste(system.file("extdata", package="reddy"),
-                  "RC_2008_01_1000_stream.json", sep="/")
+                  "RC_2008_100000_stream.json", sep="/")
 corpus <- read_reddit_stream(filename) %>%
-    filter_attrs(c("id", "body"), negative=TRUE)
+    remove_attrs(c("id", "body"), negative=TRUE)
 ```
 
 # Text Curation
@@ -39,12 +39,14 @@ Before performing the analysis, it is reasonable to do some text curation, i.e. 
 
 ```{r}
 curated_corpus <- corpus %>%
-    filter_digits() %>% filter_non_alphanumeric()
+    remove_emails() %>%
+    remove_digits() %>%
+    remove_non_alphanumeric()
 ```
 
 # Latent Dirichlet Allocation
 
-Mallet expects a file containing stopwords which are removed from the corpus and this package contains a file with english stopwords taken from \url{http://www.ranks.nl/stopwords}. The first step is to create mallet instances of your corpus that can be used by topic models provided by mallet. Then create the topic model of your choice, in this case we use latent dirichlet allocation (LDA), and load the mallet instances into it.
+Mallet expects a file containing stopwords which are removed from the corpus and this package contains a file with [English stopwords](http://www.ranks.nl/stopwords). The first step is to create mallet instances of your corpus that can be used by topic models provided by mallet. Then create the topic model of your choice, in this case we use latent dirichlet allocation (LDA), and load the mallet instances into it.
 
 ```{r}
 stopwords <- paste(system.file("extdata", package="reddy"),
@@ -77,7 +79,7 @@ topic_model$train(200)
 
 ## Results
 
-Mallet provides functions for extracting the important pieces of information from our trained topic model. We want to see the distribution of topics over each document and distribution of words over each topic. There is also a function for getting the top words of different topics
+Mallet provides functions for extracting the important pieces of information from our trained topic model. We want to see the distribution of topics over each document and distribution of words over each topic. There is also a function for getting the top words of different topics and a function for showing the top words of each topic.
 
 ```{r}
 doc_topics <- mallet.doc.topics(topic_model, smoothed=T, normalized=T)
@@ -85,4 +87,5 @@ topic_words <- mallet.topic.words(topic_model, smoothed=T, normalized=T)
 
 as.vector(head(doc_topics, n=1))
 mallet.top.words(topic_model, topic_words[1,])
+mallet.topic.labels(topic_model, topic_words)
 ```

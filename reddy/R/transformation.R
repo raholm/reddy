@@ -1,4 +1,4 @@
-#' Filter attributes from a corpus
+#' Removes attributes from a corpus
 #'
 #' @param corpus A dataframe of the corpus
 #' @param attrs A character with the attributes to remove
@@ -6,7 +6,7 @@
 #' @return A filtered corpus
 #'
 #' @export
-filter_attrs <- function(corpus, attrs=NULL, negative=FALSE) {
+remove_attrs <- function(corpus, attrs=NULL, negative=FALSE) {
     assert_character(attrs, null.ok=TRUE)
     assert_subset(names(corpus), attrs)
 
@@ -22,7 +22,7 @@ filter_attrs <- function(corpus, attrs=NULL, negative=FALSE) {
     corpus %>% dplyr::select(-dplyr::one_of(attrs))
 }
 
-#' Filter digits from a corpus
+#' Removes digits from a corpus
 #'
 #' It does not remove numbers embedded in words such as 'hello123', '123hello', 'h3ll0'.
 #'
@@ -30,7 +30,7 @@ filter_attrs <- function(corpus, attrs=NULL, negative=FALSE) {
 #' @return A filtered corpus
 #'
 #' @export
-filter_digits <- function(corpus) {
+remove_digits <- function(corpus) {
     assert_subset(names(corpus), "body")
     .remove_digits(corpus)
 }
@@ -44,13 +44,13 @@ filter_digits <- function(corpus) {
     corpus %>% dplyr::mutate(body=.remove_digits_helper(body))
 }
 
-#' Filter non-alphanumeric characters from a corpus
+#' Removes non-alphanumeric characters from a corpus
 #'
 #' @param corpus A dataframe of the corpus
 #' @return A filtered corpus
 #'
 #' @export
-filter_non_alphanumeric <- function(corpus) {
+remove_non_alphanumeric <- function(corpus) {
     assert_subset(names(corpus), "body")
     .remove_non_alphanumeric(corpus)
 }
@@ -62,4 +62,21 @@ filter_non_alphanumeric <- function(corpus) {
     }
 
     corpus %>% dplyr::mutate(body=.remove_non_alphanumeric_helper(body))
+}
+
+#' Removes emails from a corpus
+#'
+#' @export
+remove_emails <- function(corpus)  {
+    assert_subset(names(corpus), "body")
+    .remove_emails(corpus)
+}
+
+#' @keywords internal
+.remove_emails <- function(corpus) {
+    .remove_emails_helper <- function(text) {
+        stringr::str_trim(gsub('\\S+@\\S+.\\S+', '', text))
+    }
+
+    corpus %>% dplyr::mutate(body=.remove_emails_helper(body))
 }

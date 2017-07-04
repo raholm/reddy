@@ -24,7 +24,7 @@ suppressMessages(library(dplyr))
 filename <- paste(system.file("extdata", package="reddy"),
                   "RC_2008_01_1000_raw.json", sep="/")
 corpus_raw <- read_reddit_raw(filename) %>%
-    filter_attrs(c("id", "body"), negative=TRUE)
+    remove_attrs(c("id", "body"), negative=TRUE)
 head(corpus_raw)
 ```
 
@@ -34,6 +34,6 @@ head(corpus_raw)
 filename <- paste(system.file("extdata", package="reddy"),
                   "RC_2008_01_1000_stream.json", sep="/")
 corpus_stream <- read_reddit_stream(filename) %>%
-    filter_attrs(c("id", "body"), negative=TRUE)
+    remove_attrs(c("id", "body"), negative=TRUE)
 head(corpus_stream)
 ```
