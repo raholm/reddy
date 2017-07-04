@@ -1,27 +1,68 @@
 #' @export
-tokenize <- function(corpus, rare_word_limit=10, stopwords=NULL) {
-    assert_subset(names(corpus), "body")
+tokenize <- function(corpus, rare_word_limit=10, stopwords=NULL, token="words", to_lower=FALSE, ...) {
+    assert_subset(names(corpus), c("id", "body"))
+    assert_character(corpus$id)
+    assert_character(corpus$body)
+    assert_character(stopwords, null.ok=TRUE)
 
-    text <- dplyr::data_frame(id=as.factor(corpus$id), text=corpus$body)
-    tidytext::unnest_tokens(text, word, text, token=stringr::str_split, pattern=" ", to_lower=FALSE)
+    corpus <- dplyr::data_frame(id=as.factor(corpus$id), text=corpus$body)
+
+    tokenized_corpus <- corpus %>%
+        tidytext::unnest_tokens(token, text, token=token, to_lower=to_lower, ...)
+
+    words_to_remove <- NULL
 
     if (rare_word_limit > 0) {
-        corpus <- .remove_rare_words(corpus, rare_word_limit)
+        words_to_remove <- .get_rare_words(corpus, rare_word_limit, to_lower)
     }
 
     if (!is.null(stopwords)) {
-        corpus <- .remove_stopwords(corpus, stopwords)
+        words_to_remove <- c(words_to_remove, stopwords)
     }
 
-    corpus
+    if (!is.null(words_to_remove)) {
+        words_to_remove <- dplyr::data_frame(token=words_to_remove)
+
+        if (token == "words") {
+            tokenized_corpus <- tokenized_corpus %>%
+                mutate(row=row_number()) %>%
+                anti_join(words_to_remove, by=c("token")) %>%
+                arrange(row) %>%
+                mutate(row=NULL)
+        } else {
+
+        }
+    }
+
+    tokenized_corpus
 }
 
 #' @keywords internal
-.remove_rare_words <- function(corpus, rare_word_limit) {
-    corpus
+.get_rare_words <- function(corpus, tokenized_corpus=NULL, rare_word_limit=10, to_lower=FALSE) {
+    if (!is.null(tokenized_corpus)) {
+        rare_words <- tokenized_corpus %>%
+            filter(n <= rare_word_limit) %>%
+            mutate(n=NULL)
+    } else {
+        rare_words <- corpus %>%
+            tidytext::unnest_tokens(word, text, token="words", to_lower=to_lower, ...) %>%
+            filter(n <= rare_word_limit) %>%
+            mutate(n=NULL)
+    }
+
+    rare_words$word
 }
 
-#' @keywords internal
-.remove_stopwords <- function(corpus, stopwords) {
-    corpus
+#' @export
+collapse_tokenized_corpus <- function(tokenized_corpus) {
+    assert_type(tokenized_corpus, "tbl_df")
+    assert_subset(names(tokenized_corpus), c("id", "token"))
+
+    tokenized_corpus %>%
+        group_by(id) %>%
+        mutate(text=paste(token, sep="", collapse=" "),
+               token=NULL) %>%
+        filter(row_number() == 1) %>%
+        ungroup() %>%
+        mutate(id=as.character(document))
 }
