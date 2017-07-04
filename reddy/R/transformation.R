@@ -7,7 +7,7 @@
 #'
 #' @export
 filter_attrs <- function(corpus, attrs=NULL, negative=FALSE) {
-    assert_is_character(attrs, null.ok=TRUE)
+    assert_character(attrs, null.ok=TRUE)
     assert_subset(names(corpus), attrs)
 
     if (negative) {
@@ -38,7 +38,7 @@ filter_digits <- function(corpus) {
 #' @keywords internal
 .remove_digits <- function(corpus) {
     .remove_digits_helper <- function(text) {
-        as.factor(stringr::str_trim(gsub("\\b\\d+\\b", "", text)))
+        stringr::str_trim(gsub("\\b\\d+\\b", "", text))
     }
 
     corpus %>% dplyr::mutate(body=.remove_digits_helper(body))
@@ -58,7 +58,7 @@ filter_non_alphanumeric <- function(corpus) {
 #' @keywords internal
 .remove_non_alphanumeric <- function(corpus) {
     .remove_non_alphanumeric_helper <- function(text) {
-        as.factor(stringr::str_trim(stringr::str_replace_all(text, "[[:punct:]^]", "")))
+        stringr::str_trim(stringr::str_replace_all(text, "[[:punct:]^]", ""))
     }
 
     corpus %>% dplyr::mutate(body=.remove_non_alphanumeric_helper(body))

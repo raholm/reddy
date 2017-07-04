@@ -1,7 +1,7 @@
 #' Asserts that the input is string.
 #'
 #' @param text Input that is checked for being a string.
-assert_is_string <- function(text) {
+assert_string <- function(text) {
     if (!(is.character(text) & length(text) == 1)) {
         stop(paste("Input", text, "is not a string.", sep=" "))
     }
@@ -11,7 +11,7 @@ assert_is_string <- function(text) {
 #'
 #' @param character Input that is checked for being a string
 #' @param null.ok If true, will not assert null value
-assert_is_character <- function(character, null.ok=FALSE) {
+assert_character <- function(character, null.ok=FALSE) {
     if (!null.ok & is.null(character)) {
         stop("Input character is null.")
     }
@@ -24,7 +24,9 @@ assert_is_character <- function(character, null.ok=FALSE) {
 #' Asserts that input is integer
 #'
 #' @param number Input that is checked for being an integer.
-assert_is_integer <- function(number, lower=-Inf, upper=Inf) {
+#' @param lower Lower bound
+#' @param upper Upper bound
+assert_integer <- function(number, lower=-Inf, upper=Inf) {
     if (!(length(number) == 1)) {
         stop(paste("Input", number, "is not a integer.", sep=" "))
     }
@@ -50,6 +52,11 @@ assert_is_integer <- function(number, lower=-Inf, upper=Inf) {
 
 }
 
+#' Asserts that input is subset of a set
+#'
+#' @param set The full set
+#' @param subset The subset
+#' @param null.ok If set to TRUE, then null subset is fine
 assert_subset <- function(set, subset, null.ok=FALSE) {
     if (!null.ok & is.null(subset)) {
         stop("Input subset is null.")
@@ -66,7 +73,7 @@ assert_subset <- function(set, subset, null.ok=FALSE) {
 #'
 #' @param filename Input that is checked for being an existing file.
 assert_file_exists <- function(filename) {
-    assert_is_string(filename)
+    assert_string(filename)
 
     if (!file.exists(filename)) {
         stop(paste("File", filename, "does not exist.", sep=" "))
@@ -76,7 +83,7 @@ assert_file_exists <- function(filename) {
 #' Asserts that the input is an existing json file
 #'
 #' @param filename Input that is chcked for being an existing json file.
-assert_file_is_json <- function(filename) {
+assert_json_file<- function(filename) {
     assert_file_exists(filename)
 
     if (!endsWith(filename, ".json")) {

@@ -1,0 +1,39 @@
+---
+title: "Reading Reddit Comments"
+author: "Rasmus Holm"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
+
+This package supports two types of read operations on Reddit comments. \code{read_reddit_raw} and \code{read_reddit_stream} that are suited for small respectively large files. It is important to know that they assume different structure in the file. The raw-mode expects typical json-format where all json-objects are enclosed in '[]' and separated by ','. The stream-mode on the otherhand expect that each row contains a json-object, thus separation is '\\n'.
+
+# Reading using raw
+
+```{r}
+suppressMessages(library(reddy))
+suppressMessages(library(dplyr))
+
+filename <- paste(system.file("extdata", package="reddy"),
+                  "RC_2008_01_1000_raw.json", sep="/")
+corpus_raw <- read_reddit_raw(filename) %>%
+    filter_attrs(c("id", "body"), negative=TRUE)
+head(corpus_raw)
+```
+
+# Reading using stream
+
+```{r}
+filename <- paste(system.file("extdata", package="reddy"),
+                  "RC_2008_01_1000_stream.json", sep="/")
+corpus_stream <- read_reddit_stream(filename) %>%
+    filter_attrs(c("id", "body"), negative=TRUE)
+head(corpus_stream)
+```

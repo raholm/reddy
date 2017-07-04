@@ -9,10 +9,10 @@ assert_json_has_fields <- function(json, fields, ...) {
 }
 
 assert_reddit_comment_record_is_valid <- function(record, ...) {
-    assert_is_integer(record$created_utc)
-    assert_is_string(record$subreddit)
-    assert_is_string(record$body)
-    assert_is_string(record$author)
+    assert_integer(record$created_utc)
+    assert_string(record$subreddit)
+    assert_string(record$body)
+    assert_string(record$author)
 }
 
 format_reddit_comment_record <- function(record, ...) {
@@ -51,3 +51,35 @@ if (!is.data.frame(data)) {
     }
 
 }
+
+library(reddy)
+library(mallet)
+
+corpus <- read_reddit_raw("../data-raw/RC_2008_01_1000_raw.json") %>%
+    filter_attrs(c("id", "author", "body"), negative=TRUE) %>%
+    filter_digits() %>% filter_non_alphanumeric()
+
+corpus <- read_reddit_stream("../data-raw/RC_2008_01_1000_stream.json") %>%
+    filter_attrs(c("id", "author", "body"), negative=TRUE) %>%
+    filter_digits() %>% filter_non_alphanumeric()
+
+
+## corpus$id <- as.character(corpus$id)
+corpus$body <- as.character(corpus$body)
+
+mallet_instances <- mallet.import(corpus$id, corpus$body, "../data-raw/stopwords.txt")
+
+topic_model <- MalletLDA(num.topics=20)
+topic_model$loadDocuments(mallet_instances)
+vocabulary <- topic_model$getVocabulary()
+word_freqs <- mallet.word.freqs(topic_model)
+
+topic_model$setAlphaOptimization(20, 50)
+topic_model$train(200)
+
+topic_model$maximize(10)
+
+doc_topics <- mallet.doc.topics(topic_model, smoothed=T, normalized=T)
+topic_words <- mallet.topic.words(topic_model, smoothed=T, normalized=T)
+
+mallet.top.words(topic_model, topic_words[1,])
