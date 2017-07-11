@@ -7,7 +7,7 @@
 #'
 #' @export
 read_reddit_stream <- function(filename, pagesize=10000) {
-    assert_json_file(filename)
+    checkr::assert_filetype(filename, ".json")
 
     data <- try(jsonlite::stream_in(file(filename), pagesize=pagesize, verbose=FALSE), silent=TRUE)
 
@@ -24,7 +24,7 @@ read_reddit_stream <- function(filename, pagesize=10000) {
 #'
 #' @export
 read_reddit_raw <- function(filename) {
-    assert_json_file(filename)
+    checkr::assert_filetype(filename, ".json")
 
     data <- try(jsonlite::read_json(filename, simplifyVector = TRUE), silent=TRUE)
 

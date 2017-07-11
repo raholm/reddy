@@ -7,8 +7,8 @@
 #'
 #' @export
 remove_attrs <- function(corpus, attrs=NULL, negative=FALSE) {
-    assert_character(attrs, null.ok=TRUE)
-    assert_subset(names(corpus), attrs)
+    checkr::assert_character(attrs, null.ok=TRUE)
+    checkr::assert_subset(attrs, names(corpus))
 
     if (negative) {
         attrs <- names(corpus)[!(names(corpus) %in% attrs)]
@@ -31,7 +31,7 @@ remove_attrs <- function(corpus, attrs=NULL, negative=FALSE) {
 #'
 #' @export
 remove_digits <- function(corpus) {
-    assert_subset(names(corpus), "body")
+    checkr::assert_subset("body", names(corpus))
     .remove_digits(corpus)
 }
 
@@ -51,7 +51,7 @@ remove_digits <- function(corpus) {
 #'
 #' @export
 remove_non_alphanumeric <- function(corpus) {
-    assert_subset(names(corpus), "body")
+    checkr::assert_subset("body", names(corpus))
     .remove_non_alphanumeric(corpus)
 }
 
@@ -68,7 +68,7 @@ remove_non_alphanumeric <- function(corpus) {
 #'
 #' @export
 remove_emails <- function(corpus)  {
-    assert_subset(names(corpus), "body")
+    checkr::assert_subset("body", names(corpus))
     .remove_emails(corpus)
 }
 

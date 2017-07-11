@@ -1,9 +1,9 @@
 #' @export
 tokenize <- function(corpus, rare_word_limit=10, stopwords=NULL, token="words", to_lower=FALSE, ...) {
-    assert_subset(names(corpus), c("id", "body"))
-    assert_character(corpus$id)
-    assert_character(corpus$body)
-    assert_character(stopwords, null.ok=TRUE)
+    checkr::assert_subset(names(corpus), c("id", "body"))
+    checkr::assert_character(corpus$id)
+    checkr::assert_character(corpus$body)
+    checkr::assert_character(stopwords, null.ok=TRUE)
 
     corpus <- dplyr::data_frame(id=as.factor(corpus$id), text=corpus$body)
 
@@ -55,8 +55,8 @@ tokenize <- function(corpus, rare_word_limit=10, stopwords=NULL, token="words", 
 
 #' @export
 collapse_tokenized_corpus <- function(tokenized_corpus) {
-    assert_type(tokenized_corpus, "tbl_df")
-    assert_subset(names(tokenized_corpus), c("id", "token"))
+    checkr::assert_type(tokenized_corpus, "tbl_df")
+    checkr::assert_subset(names(tokenized_corpus), c("id", "token"))
 
     tokenized_corpus %>%
         group_by(id) %>%
