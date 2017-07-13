@@ -1,2 +1,2 @@
 # reddy
-Reddit Curation
+Reddit Comment Parsing
