@@ -48,5 +48,5 @@ read_reddit_raw <- function(filename) {
         stop(error_message)
     }
 
-    data
+    dplyr::as_data_frame(data)
 }
