@@ -6,7 +6,7 @@
 #' @return A filtered corpus
 #'
 #' @export
-remove_attrs <- function(corpus, attrs=NULL, negative=FALSE) {
+rm_attrs <- function(corpus, attrs=NULL, negative=FALSE) {
     checkr::assert_character(attrs, null.ok=TRUE)
     checkr::assert_subset(attrs, names(corpus))
 
@@ -14,10 +14,10 @@ remove_attrs <- function(corpus, attrs=NULL, negative=FALSE) {
         attrs <- names(corpus)[!(names(corpus) %in% attrs)]
     }
 
-    .remove_attrs(corpus, attrs)
+    .rm_attrs(corpus, attrs)
 }
 
 #' @keywords internal
-.remove_attrs <- function(corpus, attrs) {
+.rm_attrs <- function(corpus, attrs) {
     corpus %>% dplyr::select(-dplyr::one_of(attrs))
 }

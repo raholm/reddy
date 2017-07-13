@@ -2,4 +2,4 @@
 
 export(read_reddit_raw)
 export(read_reddit_stream)
-export(remove_attrs)
+export(rm_attrs)
