@@ -11,7 +11,7 @@ read_reddit_stream <- function(filename, pagesize=10000) {
 
     data <- try(jsonlite::stream_in(file(filename), pagesize=pagesize, verbose=FALSE), silent=TRUE)
 
-    .check_reddit_data(data)
+    .check_data(data)
 }
 
 #' Reads a json file containing Reddit comments in a single pass.
@@ -28,11 +28,11 @@ read_reddit_raw <- function(filename) {
 
     data <- try(jsonlite::read_json(filename, simplifyVector = TRUE), silent=TRUE)
 
-    .check_reddit_data(data)
+    .check_data(data)
 }
 
 #' @keywords internal
-.check_reddit_data <- function(data) {
+.check_data <- function(data) {
     if (!is.data.frame(data)) {
         error_message <- data[[1]]
         hint <- NULL
