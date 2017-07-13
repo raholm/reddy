@@ -17,7 +17,10 @@ One area of text analysis is so called topic modeling, i.e, finding topics in a 
 
 # Loading the required libraries
 ```{r}
+## devtools::install_github("raholm/texcur", subdir="texcur")
+
 suppressMessages(library(reddy))
+suppressMessages(library(texcur))
 suppressMessages(library(dplyr))
 suppressMessages(library(mallet))
 ```
@@ -30,7 +33,8 @@ The first thing we need to do is to actually read the corpus from file and in th
 filename <- paste(system.file("extdata", package="reddy"),
                   "RC_2008_100000_stream.json", sep="/")
 corpus <- read_reddit_stream(filename) %>%
-    remove_attrs(c("id", "body"), negative=TRUE)
+    rm_attrs(c("id", "body"), negative=TRUE) %>%
+    rename(text=body)
 ```
 
 # Text Curation
@@ -39,9 +43,9 @@ Before performing the analysis, it is reasonable to do some text curation, i.e. 
 
 ```{r}
 curated_corpus <- corpus %>%
-    remove_emails() %>%
-    remove_digits() %>%
-    remove_non_alphanumeric()
+    rm_emails() %>%
+    rm_numbers() %>%
+    rm_non_alphanumeric()
 ```
 
 # Latent Dirichlet Allocation
@@ -51,7 +55,7 @@ Mallet expects a file containing stopwords which are removed from the corpus and
 ```{r}
 stopwords <- paste(system.file("extdata", package="reddy"),
                   "stopwords.txt", sep="/")
-mallet_instances <- mallet.import(curated_corpus$id, curated_corpus$body, stopwords)
+mallet_instances <- mallet.import(curated_corpus$id, curated_corpus$text, stopwords)
 topic_model <- MalletLDA(num.topics=20)
 topic_model$loadDocuments(mallet_instances)
 ```
