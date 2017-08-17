@@ -7,7 +7,7 @@
 #'
 #' @export
 rm_attrs <- function(corpus, attrs=NULL, negative=FALSE) {
-    checkr::assert_character(attrs, null.ok=TRUE)
+    checkr::assert_character(attrs, null_ok=TRUE)
     checkr::assert_subset(attrs, names(corpus))
 
     if (negative) {

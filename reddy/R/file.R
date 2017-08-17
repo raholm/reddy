@@ -7,7 +7,7 @@
 #'
 #' @export
 read_reddit_stream <- function(filename, pagesize=10000) {
-    checkr::assert_filetype(filename, ".json")
+    checkr::assert_file_type(filename, ".json")
 
     data <- try(jsonlite::stream_in(file(filename), pagesize=pagesize, verbose=FALSE), silent=TRUE)
 
@@ -24,14 +24,13 @@ read_reddit_stream <- function(filename, pagesize=10000) {
 #'
 #' @export
 read_reddit_raw <- function(filename) {
-    checkr::assert_filetype(filename, ".json")
+    checkr::assert_file_type(filename, ".json")
 
     data <- try(jsonlite::read_json(filename, simplifyVector = TRUE), silent=TRUE)
 
     .check_data(data)
 }
 
-#' @keywords internal
 .check_data <- function(data) {
     if (!is.data.frame(data)) {
         error_message <- data[[1]]
